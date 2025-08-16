@@ -1,8 +1,10 @@
 from src.activity_handler.fetcher import ActivityFetcher
-
+from src.common.utils import load_json
 
 def main():
-    fetcher = ActivityFetcher()
+    client = load_json(".local/strava-client.json")
+
+    fetcher = ActivityFetcher(client['id'], client['secret'])
     activities = fetcher.fetch_activities(per_page=10, max_pages=2)
     print(f"Fetched {len(activities)} activities:")
     for act in activities:

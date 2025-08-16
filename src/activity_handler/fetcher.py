@@ -1,15 +1,14 @@
 import requests
 import time
 import webbrowser
-from src.activity_handler.utils import load_json, save_json
+from src.common.utils import load_json, save_json
 
 
 class ActivityFetcher:
 
-    def __init__(self):
-        client = load_json(".local/strava-client.json")
-        self.__client_id = client['id']
-        self.__client_secret = client['secret']
+    def __init__(self, client_id, client_secret):
+        self.__client_id = client_id
+        self.__client_secret = client_secret
 
         self.__tokens_file = ".local/tokens.json"
         self.__redirect_url = "http://localhost/exchange_token"
