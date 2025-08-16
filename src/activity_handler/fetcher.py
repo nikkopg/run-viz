@@ -85,3 +85,20 @@ class ActivityFetcher:
                 break
             all_activities.extend(data)
         return all_activities
+    
+
+    def fetch_activity_details(self, activity_id, streams=False):
+        access_token = self.get_access_token()
+        headers = {"Authorization": f"Bearer {access_token}"}
+
+        if streams:
+            api_url = f"https://www.strava.com/api/v3/activities/{activity_id}/streams",
+        else:
+            api_url = f"https://www.strava.com/api/v3/activities/{activity_id}"
+
+        res = requests.get(
+            api_url,
+            headers=headers,
+            params={"include_all_efforts": False}
+        )
+        return res.json()
