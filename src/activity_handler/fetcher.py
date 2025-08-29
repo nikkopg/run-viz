@@ -91,13 +91,24 @@ class ActivityFetcher:
         headers = {"Authorization": f"Bearer {access_token}"}
 
         if streams:
-            api_url = f"https://www.strava.com/api/v3/activities/{activity_id}/streams",
-        else:
-            api_url = f"https://www.strava.com/api/v3/activities/{activity_id}"
+            # Activity streams (heartrate, cadence, etc.)
+            res = requests.get(
+                f"https://www.strava.com/api/v3/activities/{activity_id}/streams",
+                headers=headers,
+                params={
+                    "keys": "time,heartrate,cadence,latlng,altitude",
+                    "key_by_type": "true",
+                    "resolution": "high"
+                }
+            )
 
-        res = requests.get(
-            api_url,
-            headers=headers,
-            params={"include_all_efforts": False}
-        )
+        else:
+            # Detailed activity (summary info, splits, avg HR, etc.)
+            res = requests.get(
+                f"https://www.strava.com/api/v3/activities/{activity_id}",
+                headers=headers,
+                params={"include_all_efforts": False}
+            )
+
         return res.json()
+
