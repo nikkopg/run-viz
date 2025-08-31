@@ -96,7 +96,7 @@ class ActivityFetcher:
                 f"https://www.strava.com/api/v3/activities/{activity_id}/streams",
                 headers=headers,
                 params={
-                    "keys": "time,heartrate,cadence,latlng,altitude",
+                    "keys": "time,heartrate,velocity_smooth,watts,temp,grade_smooth,cadence,latlng",
                     "key_by_type": "true",
                     "resolution": "high"
                 }
