@@ -21,37 +21,33 @@ class Visualizer:
         fig, (ax1, ax2) = plt.subplots(
             nrows=2,
             sharex=True,
-            figsize=(12, 8),
+            figsize=(8, 6),
             gridspec_kw={'hspace': 0.1}
         )
 
-        # First subplot: Heart Rate and Power with twin axes
-        ax1.plot(distance, self.details['heartrate']['data'], color='tab:red', label='Heart Rate (bpm)')
+        alpha = 0.8
+        ax1.plot(distance, self.details['heartrate']['data'], color='tab:red', alpha=alpha, label='Heart Rate (bpm)')
         ax1.set_ylabel('HR (bpm)', color='tab:red')
         ax1.tick_params(axis='y', labelcolor='tab:red')
         ax1.legend(loc='upper left')
         ax1.set_title(f"{self.summary['name']} ({self.summary['id']})")
 
         ax1b = ax1.twinx()
-        ax1b.plot(distance, self.details['watts']['data'], color='tab:blue', alpha=0.5, label='Power (watts)')
-        ax1b.set_ylabel('Power (W)', color='tab:blue')
-        ax1b.tick_params(axis='y', labelcolor='tab:blue')
-        ax1b.legend(loc='upper right')
-
         pace = self.calculate_pace()
-        ax2.plot(distance[1:], pace, color='tab:green', label='Pace (min/km)')
-        # ax2.set_ylim([0, 25])
-        ax2.invert_yaxis()
-        ax2.set_ylabel('Pace (min/km)', color='tab:green')
+        ax1b.plot(distance[1:], pace, color='tab:blue',alpha=alpha, label='Pace (min/km)')
+        ax1b.invert_yaxis()
+        ax1b.set_ylabel('Pace (min/km)', color='tab:blue')
+        ax1b.legend(loc='upper right')        
+        
+        ax2.plot(distance, self.details['watts']['data'], color='tab:green', alpha=alpha, label='Power (watts)')
+        ax2.set_ylabel('Power (W)', color='tab:green')
+        ax2.tick_params(axis='y', labelcolor='tab:green')
         ax2.legend(loc='upper right')
-
-        # Third subplot: Gradient
-        ax3 = ax2.twinx()
-        ax3.plot(distance, self.details['grade_smooth']['data'], color='tab:purple', alpha=0.5, label='Gradient (%)')
-        ax3.set_ylabel('Gradient (%)', color='tab:purple')
-        ax3.legend(loc='upper left')
-
-        # Final adjustments
+        
+        ax2b = ax2.twinx()
+        ax2b.plot(distance, self.details['grade_smooth']['data'], color='tab:purple', alpha=alpha, label='Gradient (%)')
+        ax2b.set_ylabel('Gradient (%)', color='tab:purple')
+        ax2b.legend(loc='upper left')
         ax2.set_xlabel('Distance (km)')
         
         # Add ticks
