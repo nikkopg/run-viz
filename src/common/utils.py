@@ -5,6 +5,8 @@ import json
 def save_json(tokens, filepath):
     with open(filepath, "w") as f:
         json.dump(tokens, f, indent=2)
+    print(f"Activities saved to {filepath}")
+
 
 def load_json(filepath):
     if os.path.exists(filepath):
