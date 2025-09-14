@@ -1,3 +1,4 @@
 .local
 src/activity_handler/__pycache__
 src/common/__pycache__
+src/visualizer/__pycache__
