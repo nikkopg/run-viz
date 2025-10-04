@@ -2,11 +2,14 @@ import requests
 import time
 import webbrowser
 from src.common.utils import load_json, save_json
+from src.common.logger import Logger
 
 
 class ActivityFetcher:
 
-    def __init__(self, client_id, client_secret):
+    def __init__(self, client_id, client_secret, logger: Logger):
+        self.__logging = logger.logger
+
         self.__client_id = client_id
         self.__client_secret = client_secret
 
@@ -20,8 +23,8 @@ class ActivityFetcher:
             f"&response_type=code&redirect_uri={self.__redirect_url}"
             f"&approval_prompt=force&scope=read,activity:read_all"
         )
-        print("Open this URL in your browser and approve access:")
-        print(auth_url)
+        self.__logging.info("Open this URL in your browser and approve access:")
+        self.__logging.info(auth_url)
         try:
             webbrowser.open(auth_url)
         except:

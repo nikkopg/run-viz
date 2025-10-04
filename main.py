@@ -1,17 +1,19 @@
 from src.activity_handler.fetcher import ActivityFetcher
 from src.visualizer.visualizer import Visualizer
 from src.common.utils import load_json, save_json
+from src.common.logger import Logger
 
 def main():
     client = load_json(".local/strava-client.json")
 
-    fetcher = ActivityFetcher(client['id'], client['secret'])
+    logger = Logger()
+    fetcher = ActivityFetcher(client['id'], client['secret'], logger)
     activities = fetcher.fetch_activities(per_page=10, max_pages=2)
-    print(f"Fetched {len(activities)} activities:")
+    logger.logger.info(f"Fetched {len(activities)} activities:")
 
     activity_data = []
     for act in activities:
-        print(f"- {act['name']} on {act['start_date']} ({act['distance']/1000:.2f} km)")
+        logger.logger.info(f"- {act['name']} on {act['start_date']} ({act['distance']/1000:.2f} km)")
         if act['type'] == 'Run':
             details = fetcher.fetch_activity_details(act['id'], streams=True)
 
@@ -23,7 +25,9 @@ def main():
 
     save_json(activity_data, "output/activities.json")
 
-    vis = Visualizer()
+    # activity_data = load_json("output/activities.json")
+
+    vis = Visualizer(logger)
     for activity in activity_data:
         vis.visualize(activity)
 
