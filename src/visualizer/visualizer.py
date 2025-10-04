@@ -1,11 +1,14 @@
 import numpy as np
 import matplotlib.ticker as ticker
 import matplotlib.pyplot as plt
+from src.common.logger import Logger
 
 
 class Visualizer:
     
-    def __init__(self):
+    def __init__(self, logger: Logger):
+        self.__logging = logger.logger
+        self.__logging_path = logger.log_filepath
         self.details = None
         self.summary = None
 
@@ -63,8 +66,8 @@ class Visualizer:
         ax2.grid(which='major', linewidth=0.5, alpha=0.8)
 
         filename = f"activity_{self.summary['id']}.png"
-        plt.savefig(f"output/{filename}", dpi=150, bbox_inches="tight")
-        print(f"Plot saved to {filename}")
+        plt.savefig(f"{self.__logging_path}/{filename}", dpi=150, bbox_inches="tight")
+        self.__logging.info(f"Plot saved to {filename}")
 
 
     def calculate_pace(self):
