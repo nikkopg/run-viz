@@ -2,11 +2,15 @@ import requests
 import time
 import webbrowser
 from src.common.utils import load_json, save_json
+from src.common.logger import Logger
 
 
 class ActivityFetcher:
 
-    def __init__(self, client_id, client_secret):
+    def __init__(self, client_id, client_secret, logger: Logger):
+        self.__logging = logger.logger
+        self.logging_path = logger.log_filepath
+
         self.__client_id = client_id
         self.__client_secret = client_secret
 
@@ -20,8 +24,8 @@ class ActivityFetcher:
             f"&response_type=code&redirect_uri={self.__redirect_url}"
             f"&approval_prompt=force&scope=read,activity:read_all"
         )
-        print("Open this URL in your browser and approve access:")
-        print(auth_url)
+        self.__logging.info("Open this URL in your browser and approve access:")
+        self.__logging.info(auth_url)
         try:
             webbrowser.open(auth_url)
         except:
@@ -66,6 +70,28 @@ class ActivityFetcher:
             tokens = self.refresh_access_token(tokens["refresh_token"])
 
         return tokens["access_token"]
+    
+
+    def get_n_activities(self, n=10, save=True):
+        activities = self.fetch_activities(per_page=n, max_pages=1)
+        self.__logging.info(f"Fetched {len(activities)} activities:")
+
+        activity_data = []
+        for act in activities:
+            self.__logging.info(f"- {act['name']} on {act['start_date']} ({act['distance']/1000:.2f} km)")
+            if act['type'] == 'Run':
+                details = self.fetch_activity_details(act['id'], streams=True)
+
+                # merge summary + details
+                activity_data.append({
+                    "summary": act,
+                    "details": details
+                })
+
+        if save:
+            save_json(activity_data, f"{self.logging_path}/activities.json")
+
+        return activity_data
 
 
     def fetch_activities(self, per_page=30, max_pages=1):
