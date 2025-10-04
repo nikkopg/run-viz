@@ -29,6 +29,7 @@ class Visualizer:
         ax1.plot(distance, self.details['heartrate']['data'], color='tab:red', alpha=alpha, label='Heart Rate (bpm)')
         ax1.set_ylabel('HR (bpm)', color='tab:red')
         ax1.tick_params(axis='y', labelcolor='tab:red')
+        ax1.set_ylim([90, 200])
         ax1.legend(loc='upper left')
         ax1.set_title(f"{self.summary['name']} ({self.summary['id']})")
 
