@@ -73,7 +73,7 @@ class ActivityFetcher:
     
 
     def get_n_activities(self, n=10, save=True):
-        activities = self.fetch_activities(per_page=n, max_pages=2)
+        activities = self.fetch_activities(per_page=n, max_pages=1)
         self.__logging.info(f"Fetched {len(activities)} activities:")
 
         activity_data = []
